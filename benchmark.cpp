@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 {
     std::cout << "Description:\t" << dgemv_desc << std::endl << std::endl;
 
-    std::cout << std::fixed << std::setprecision(5);
+    std::cout << std::fixed << std::setprecision(12);
 
     // we purposefully run the smallest problem twice so as to "condition"
     // BLAS. For timing purposes, ignore the timing of the first problem size
@@ -93,11 +93,15 @@ int main(int argc, char** argv)
         memcpy((void *)Ycopy, (const void *)Y, sizeof(double)*n);
 
         // insert start timer code here
+        const auto start = std::chrono::steady_clock::now();
 
         // call the method to do the work
         my_dgemv(n, A, X, Y); 
 
         // insert end timer code here, and print out the elapsed time for this problem size
+        const auto end = std::chrono::steady_clock::now();
+        const double seconds = std::chrono::duration<double>(end - start).count();
+        std::cout << "N=" << n << " elapsed_seconds=" << seconds << std::endl;
 
 
         // now invoke the cblas method to compute the matrix-vector multiplye
